@@ -1,0 +1,43 @@
+/* Theme Definitions for Calculator App */
+
+/* Dark Theme (Default) */
+:root {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-tertiary: #2d2d2d;
+    --display-bg: #000000;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --focus-outline: #bb86fc;
+    
+    /* Button Colors */
+    --btn-number-bg: #2d2d2d;
+    --btn-number-text: #ffffff;
+    --btn-operation-bg: #ff9500;
+    --btn-operation-text: #ffffff;
+    --btn-clear-bg: #a6a6a6;
+    --btn-clear-text: #000000;
+    --btn-equals-bg: #ff9500;
+    --btn-equals-text: #ffffff;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #e0e0e0;
+    --display-bg: #f0f0f0;
+    --text-primary: #000000;
+    --text-secondary: #555555;
+    --focus-outline: #6200ee;
+    
+    /* Button Colors */
+    --btn-number-bg: #e0e0e0;
+    --btn-number-text: #000000;
+    --btn-operation-bg: #ff9500;
+    --btn-operation-text: #ffffff;
+    --btn-clear-bg: #d3d3d3;
+    --btn-clear-text: #000000;
+    --btn-equals-bg: #ff9500;
+    --btn-equals-text: #ffffff;
+}
