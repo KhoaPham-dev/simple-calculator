@@ -84,6 +84,25 @@ class Calculator {
     }
   }
 
+  toggleSign() {
+    if (this.currentInput !== '0') {
+      if (this.currentInput.charAt(0) === '-') {
+        this.currentInput = this.currentInput.slice(1);
+      } else {
+        this.currentInput = '-' + this.currentInput;
+      }
+      this.updateDisplay();
+    }
+  }
+
+  clear() {
+    this.currentInput = '0';
+    this.previousInput = null;
+    this.operation = null;
+    this.shouldResetDisplay = false;
+    this.updateDisplay();
+  }
+
   // Static methods for arithmetic operations
   static add(a, b) {
     return a + b;
@@ -199,6 +218,33 @@ runner.test('Calculator - Addition', () => {
   runner.assertEqual(calc.currentInput, '8', 'Should add two integers correctly');
 });
 
+runner.test('Calculator - Addition with Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '-5';
+  calc.currentInput = '3';
+  calc.operation = 'add';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '-2', 'Should add negative and positive integers correctly');
+});
+
+runner.test('Calculator - Addition with Two Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '-5';
+  calc.currentInput = '-3';
+  calc.operation = 'add';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '-8', 'Should add two negative integers correctly');
+});
+
+runner.test('Calculator - Addition with Zero', () => {
+  const calc = new Calculator();
+  calc.previousInput = '5';
+  calc.currentInput = '0';
+  calc.operation = 'add';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '5', 'Should add zero correctly');
+});
+
 runner.test('Calculator - Subtraction', () => {
   const calc = new Calculator();
   calc.previousInput = '10';
@@ -206,6 +252,33 @@ runner.test('Calculator - Subtraction', () => {
   calc.operation = 'subtract';
   calc.calculate();
   runner.assertEqual(calc.currentInput, '6', 'Should subtract two integers correctly');
+});
+
+runner.test('Calculator - Subtraction with Negative Result', () => {
+  const calc = new Calculator();
+  calc.previousInput = '4';
+  calc.currentInput = '10';
+  calc.operation = 'subtract';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '-6', 'Should subtract to negative result correctly');
+});
+
+runner.test('Calculator - Subtraction with Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '-10';
+  calc.currentInput = '4';
+  calc.operation = 'subtract';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '-14', 'Should subtract with negative numbers correctly');
+});
+
+runner.test('Calculator - Subtraction of Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '10';
+  calc.currentInput = '-4';
+  calc.operation = 'subtract';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '14', 'Should subtract negative numbers correctly');
 });
 
 runner.test('Calculator - Multiplication', () => {
@@ -217,6 +290,42 @@ runner.test('Calculator - Multiplication', () => {
   runner.assertEqual(calc.currentInput, '42', 'Should multiply two integers correctly');
 });
 
+runner.test('Calculator - Multiplication with Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '-7';
+  calc.currentInput = '6';
+  calc.operation = 'multiply';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '-42', 'Should multiply negative and positive integers correctly');
+});
+
+runner.test('Calculator - Multiplication with Two Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '-7';
+  calc.currentInput = '-6';
+  calc.operation = 'multiply';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '42', 'Should multiply two negative integers correctly');
+});
+
+runner.test('Calculator - Multiplication by Zero', () => {
+  const calc = new Calculator();
+  calc.previousInput = '7';
+  calc.currentInput = '0';
+  calc.operation = 'multiply';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '0', 'Should multiply by zero correctly');
+});
+
+runner.test('Calculator - Multiplication by One', () => {
+  const calc = new Calculator();
+  calc.previousInput = '7';
+  calc.currentInput = '1';
+  calc.operation = 'multiply';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '7', 'Should multiply by one correctly');
+});
+
 runner.test('Calculator - Division', () => {
   const calc = new Calculator();
   calc.previousInput = '15';
@@ -224,6 +333,33 @@ runner.test('Calculator - Division', () => {
   calc.operation = 'divide';
   calc.calculate();
   runner.assertEqual(calc.currentInput, '5', 'Should divide two integers correctly');
+});
+
+runner.test('Calculator - Division with Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '-15';
+  calc.currentInput = '3';
+  calc.operation = 'divide';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '-5', 'Should divide with negative dividend correctly');
+});
+
+runner.test('Calculator - Division by Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '15';
+  calc.currentInput = '-3';
+  calc.operation = 'divide';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '-5', 'Should divide by negative divisor correctly');
+});
+
+runner.test('Calculator - Division with Two Negative Numbers', () => {
+  const calc = new Calculator();
+  calc.previousInput = '-15';
+  calc.currentInput = '-3';
+  calc.operation = 'divide';
+  calc.calculate();
+  runner.assertEqual(calc.currentInput, '5', 'Should divide two negative numbers correctly');
 });
 
 runner.test('Calculator - Integer Division', () => {
@@ -284,6 +420,35 @@ runner.test('Calculator - Percentage Calculation', () => {
   calc.currentInput = '150';
   calc.calculatePercentage();
   runner.assertEqual(calc.currentInput, '1', 'Should calculate percentage correctly for larger numbers');
+});
+
+// Test toggleSign method
+runner.test('Calculator - Toggle Sign', () => {
+  const calc = new Calculator();
+  calc.currentInput = '5';
+  calc.toggleSign();
+  runner.assertEqual(calc.currentInput, '-5', 'Should toggle positive to negative');
+  
+  calc.toggleSign();
+  runner.assertEqual(calc.currentInput, '5', 'Should toggle negative to positive');
+  
+  calc.currentInput = '0';
+  calc.toggleSign();
+  runner.assertEqual(calc.currentInput, '0', 'Should not toggle zero');
+});
+
+// Test clear method
+runner.test('Calculator - Clear', () => {
+  const calc = new Calculator();
+  calc.currentInput = '123';
+  calc.previousInput = '456';
+  calc.operation = 'add';
+  calc.shouldResetDisplay = true;
+  calc.clear();
+  runner.assertEqual(calc.currentInput, '0', 'Should reset current input to 0');
+  runner.assertEqual(calc.previousInput, null, 'Should reset previous input to null');
+  runner.assertEqual(calc.operation, null, 'Should reset operation to null');
+  runner.assertEqual(calc.shouldResetDisplay, false, 'Should reset shouldResetDisplay to false');
 });
 
 // Run tests
