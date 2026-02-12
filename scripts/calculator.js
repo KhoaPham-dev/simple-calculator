@@ -10,6 +10,7 @@ class Calculator {
         this.previousInput = null;
         this.operation = null;
         this.shouldResetDisplay = false;
+        this.isErrorState = false;
         
         this.init();
     }
@@ -47,13 +48,20 @@ class Calculator {
      * @param {string} number - Number pressed
      */
     handleNumberInput(number) {
+        // Reset error state when user starts entering new input
+        if (this.isErrorState) {
+            this.isErrorState = false;
+            this.currentInput = '0';
+        }
+
         if (this.shouldResetDisplay) {
             this.currentInput = '0';
             this.shouldResetDisplay = false;
         }
 
-        if (number === '.' && this.currentInput.includes('.')) {
-            return; // Prevent multiple decimal points
+        // Prevent decimal point input for integer-only calculator
+        if (number === '.') {
+            return;
         }
 
         if (this.currentInput === '0' && number !== '.') {
@@ -115,37 +123,39 @@ class Calculator {
             return;
         }
 
-        const prev = parseFloat(this.previousInput);
-        const current = parseFloat(this.currentInput);
+        const prev = parseInt(this.previousInput, 10);
+        const current = parseInt(this.currentInput, 10);
 
         if (isNaN(prev) || isNaN(current)) {
+            this.displayError('Error');
             return;
         }
 
         let result;
         switch (this.operation) {
             case 'add':
-                result = prev + current;
+                result = Calculator.add(prev, current);
                 break;
             case 'subtract':
-                result = prev - current;
+                result = Calculator.subtract(prev, current);
                 break;
             case 'multiply':
-                result = prev * current;
+                result = Calculator.multiply(prev, current);
                 break;
             case 'divide':
                 if (current === 0) {
-                    this.displayError('Error');
+                    this.displayError('Cannot divide by zero');
                     return;
                 }
-                result = prev / current;
+                result = Calculator.divide(prev, current);
                 break;
             default:
+                this.displayError('Error');
                 return;
         }
 
-        // Format result to avoid floating point precision issues
-        this.currentInput = this.formatResult(result);
+        // Ensure result is an integer
+        this.currentInput = result.toString();
         this.operation = null;
         this.previousInput = null;
         this.shouldResetDisplay = true;
@@ -153,17 +163,56 @@ class Calculator {
     }
 
     /**
-     * Format calculation result
+     * Add two integers
+     * @param {number} a - First integer
+     * @param {number} b - Second integer
+     * @returns {number} - Sum of a and b
+     */
+    static add(a, b) {
+        return a + b;
+    }
+
+    /**
+     * Subtract two integers
+     * @param {number} a - First integer
+     * @param {number} b - Second integer
+     * @returns {number} - Difference of a and b
+     */
+    static subtract(a, b) {
+        return a - b;
+    }
+
+    /**
+     * Multiply two integers
+     * @param {number} a - First integer
+     * @param {number} b - Second integer
+     * @returns {number} - Product of a and b
+     */
+    static multiply(a, b) {
+        return a * b;
+    }
+
+    /**
+     * Divide two integers (integer division)
+     * @param {number} a - Dividend
+     * @param {number} b - Divisor
+     * @returns {number} - Quotient of a and b (floored)
+     */
+    static divide(a, b) {
+        if (b === 0) {
+            throw new Error('Division by zero');
+        }
+        return Math.floor(a / b);
+    }
+
+    /**
+     * Format calculation result for integer display
      * @param {number} result - Calculation result
      * @returns {string} - Formatted result
      */
     formatResult(result) {
-        // Handle decimal precision
-        const strResult = result.toString();
-        if (strResult.includes('.') && strResult.split('.')[1].length > 10) {
-            return result.toFixed(10);
-        }
-        return strResult;
+        // For integer calculator, just convert to string
+        return result.toString();
     }
 
     /**
@@ -174,6 +223,7 @@ class Calculator {
         this.previousInput = null;
         this.operation = null;
         this.shouldResetDisplay = false;
+        this.isErrorState = false;
         this.updateDisplay();
     }
 
@@ -192,12 +242,13 @@ class Calculator {
     }
 
     /**
-     * Calculate percentage
+     * Calculate percentage (integer mode)
      */
     calculatePercentage() {
-        const current = parseFloat(this.currentInput);
+        const current = parseInt(this.currentInput, 10);
         if (!isNaN(current)) {
-            this.currentInput = (current / 100).toString();
+            // For integer mode, we'll do integer division by 100
+            this.currentInput = Math.floor(current / 100).toString();
             this.updateDisplay();
         }
     }
@@ -208,6 +259,7 @@ class Calculator {
      */
     displayError(message) {
         this.currentInput = message;
+        this.isErrorState = true;
         this.updateDisplay();
         setTimeout(() => {
             this.clear();

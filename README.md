@@ -61,6 +61,33 @@ simple-calculator/
 
 Simply open `index.html` in your browser. No build process required.
 
+## Testing
+
+### Unit Tests
+
+Run the unit tests to verify arithmetic functions:
+
+```bash
+node tests/calculator.test.js
+```
+
+### Integration Tests
+
+Run the integration tests to verify UI-logic interaction:
+
+```bash
+node tests/integration.test.js
+```
+
+### Test Coverage
+
+The tests cover:
+- All arithmetic operations (add, subtract, multiply, divide)
+- Edge cases (negative numbers, zero, large numbers)
+- Error handling (division by zero)
+- UI interactions (button clicks, display updates)
+- Special functions (percentage, sign toggle, clear)
+
 ## Contributing
 
 1. Fork the repository

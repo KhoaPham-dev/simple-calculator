@@ -5,11 +5,21 @@
 
 class InputValidator {
     /**
-     * Validates if a string represents a valid number
+     * Validates if a string represents a valid integer
+     * @param {string} input - Input string to validate
+     * @returns {boolean} - True if valid integer, false otherwise
+     */
+    static isValidNumber(input) {
+        // Allow only integers (positive, negative, or zero)
+        return /^-?\d+$/.test(input);
+    }
+
+    /**
+     * Validates if a string represents a valid number (including decimals)
      * @param {string} input - Input string to validate
      * @returns {boolean} - True if valid number, false otherwise
      */
-    static isValidNumber(input) {
+    static isValidNumberWithDecimals(input) {
         // Allow numbers, decimal points, and negative signs
         return /^-?\d*\.?\d*$/.test(input);
     }
